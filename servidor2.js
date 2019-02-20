@@ -1,44 +1,32 @@
+var PORT = 4998
+
 var express = require('express')
-var aplicacion = express()
-const os = require('os');
-const net = require('net');
-const server = require('http').Server(aplicacion)
+var aplication = express();
+
+const net=require('net')
+const server = require('http').Server(aplication)
 const socket = require('socket.io')(server)
-const {StringDecoder} = require('string_decoder')
-const decoder = new  StringDecoder('utf8')
+    const {StringDecoder} = require('string_decoder')
+    const decoder = new StringDecoder('utf8')
 
-var interface = os.networkInterfaces();
-var ipDinamic;
-for(var k in interface){
-    for(var k2 in interface[k]){
-        var address = interface[k][k2]
-        if(address.family == 'IPv4' && !address.internal ){
-            ipDinamic = address.address.toString();
-            console.log(ipDinamic);
-        }
-    }
-}
-
-var HOST = ipDinamic;
-
-var PORT = server.listen(process.env.PORT || 3000);
-
+var HOST = "servredes.hopto.org"
 
 var ser = net.createServer(function(so){
- 
-    
-    console.log('Usuario Conectado Servidor 1:' + so.remoteAddress + ':' + so.remotePort)
 
+    console.log('Nuevo Usuario ' + so.remoteAddress + ':' + so.remotePort)
 
-    
-    so.on('data', function(data){
-        var cent = data 
-        console.log(decoder.write(cent))
+    so.on('data',function(data){
+        var cent = data
+
+        so.write("servidor 2");
+        console.log(decoder.write(cent));
     })
 
     so.on('close',function(){
-        console.log('Usuario Desconectado Servidor 1')
+        console.log('usuario desconectado')
     })
 })
 
-ser.listen(PORT, HOST);
+ser.listen(PORT,function(){
+    console.log("server2 up")
+})
